@@ -1,6 +1,8 @@
 // becip 
 //change log 
 // 1.0.0 - Initial version 1/16/25
+// 1.0.1 - Updated for Azure Government use will need to verify the exact API versions supported in your Azure Government subscription.
+
 @description('Location for the private endpoint')
 param location string = resourceGroup().location
 
@@ -23,17 +25,17 @@ param subnetName string
 param privateDnsZoneId string
 
 // Reference existing virtual network and subnet
-resource virtualNetwork 'Microsoft.Network/virtualNetworks@2023-05-01' existing = {
+resource virtualNetwork 'Microsoft.Network/virtualNetworks@2023-01-01' existing = {
   name: vnetName
 }
 
-resource subnet 'Microsoft.Network/virtualNetworks/subnets@2023-05-01' existing = {
+resource subnet 'Microsoft.Network/virtualNetworks/subnets@2023-01-01' existing = {
   name: subnetName
   parent: virtualNetwork
 }
 
 // Create Private Endpoint
-resource privateEndpoint 'Microsoft.Network/privateEndpoints@2023-05-01' = {
+resource privateEndpoint 'Microsoft.Network/privateEndpoints@2022-09-01' = {
   name: privateEndpointName
   location: location
   properties: {
@@ -58,7 +60,7 @@ resource privateEndpoint 'Microsoft.Network/privateEndpoints@2023-05-01' = {
 }
 
 // Create Private DNS Zone Group
-resource privateDnsZoneGroup 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2023-05-01' = {
+resource privateDnsZoneGroup 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2022-09-01' = {
   name: 'default'
   parent: privateEndpoint
   properties: {
