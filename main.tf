@@ -1,4 +1,3 @@
-#becip 
 #change log 
 # 1.0.0 - Initial version 1/16/25
 #1.0.1 - Updated for Azure Government use will need to verify the exact API versions supported in your Azure Government subscription.
