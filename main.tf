@@ -89,10 +89,12 @@ resource "azurerm_private_endpoint" "private_endpoint" {
 
 # DNS Zone Virtual Network Link
 resource "azurerm_private_dns_zone_virtual_network_link" "dns_zone_link" {
-  name                 = "example-dns-link"
-  private_dns_zone_id  = var.private_dns_zone_id
-  virtual_network_id   = data.azurerm_virtual_network.vnet.id
-  resource_group_name  = azurerm_resource_group.rg.name
+  name                  = "example-dns-zone-link"  # Update with your desired link name
+  resource_group_name   = azurerm_resource_group.rg.name
+  private_dns_zone_name = "example.private.dns.zone"  # Replace with your private DNS zone name
+  virtual_network_id    = data.azurerm_virtual_network.vnet.id
 
-  registration_enabled = true
+  tags = {
+    Environment = "Production"
+  }
 }
