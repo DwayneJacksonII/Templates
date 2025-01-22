@@ -1,14 +1,14 @@
 #change log 
 # 1.0.0 - Initial version 1/16/25
 #1.0.1 - Updated for Azure Government use will need to verify the exact API versions supported in your Azure Government subscription.
-#1.0.2 - commenting out Environment use for gov 1/22/25- dj
+#1.0.2 - commenting out Environment use for gov updating v1/22/25- dj
 
 # main.tf
 terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "~> 3.0" # Update to a specific version if needed for Azure Government
+      version = "~> 3.64.0" # Replace with the latest supported version
     }
   }
 }
@@ -16,8 +16,8 @@ terraform {
 provider "azurerm" {
   features {}
 
-  # Use Azure Government cloud
-  #environment = "usgovernment"
+  # Uncomment for Azure Government
+  # environment = "usgovernment"
 }
 
 # Variables
@@ -35,7 +35,7 @@ variable "target_resource_id" {
 }
 
 variable "group_id" {
-  description = "Subresource name of the Azure resource (e.g., 'blob' for storage account)"
+  description = "Subresource name of the Azure resource (e.g., 'sites' for Function App)"
 }
 
 variable "vnet_name" {
@@ -65,7 +65,7 @@ data "azurerm_subnet" "subnet" {
 # Resource Group (example resource group, replace as needed)
 resource "azurerm_resource_group" "rg" {
   name     = "example-resource-group"
-  location = var.location != null ? var.location : "usgovvirginia"
+  location = var.location != null ? var.location : "eastus"
 }
 
 # Private Endpoint
@@ -87,13 +87,12 @@ resource "azurerm_private_endpoint" "private_endpoint" {
   }
 }
 
-# Private DNS Zone Group
-resource "azurerm_private_dns_zone_group" "dns_zone_group" {
-  name                 = "default"
-  private_endpoint_id  = azurerm_private_endpoint.private_endpoint.id
+# DNS Zone Virtual Network Link
+resource "azurerm_private_dns_zone_virtual_network_link" "dns_zone_link" {
+  name                 = "example-dns-link"
+  private_dns_zone_id  = var.private_dns_zone_id
+  virtual_network_id   = data.azurerm_virtual_network.vnet.id
+  resource_group_name  = azurerm_resource_group.rg.name
 
-  private_dns_zone_config {
-    name                  = "default"
-    private_dns_zone_id   = var.private_dns_zone_id
-  }
+  registration_enabled = true
 }
