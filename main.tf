@@ -1,3 +1,6 @@
+To fix the issue, you need to replace `private_dns_zone_id` with `private_dns_zone_name` and define the corresponding variable. Here is the updated `main.tf`:
+
+```hcl
 #change log 
 # 1.0.0 - Initial version 1/16/25
 #1.0.1 - Updated for Azure Government use will need to verify the exact API versions supported in your Azure Government subscription.
@@ -58,8 +61,8 @@ variable "subnet_name" {
   type        = string
 }
 
-variable "private_dns_zone_id" {
-  description = "Private DNS Zone Resource ID"
+variable "private_dns_zone_name" {
+  description = "Private DNS Zone name"
   type        = string
 }
 
@@ -107,7 +110,7 @@ resource "azurerm_private_endpoint" "private_endpoint" {
 # DNS Zone Virtual Network Link
 resource "azurerm_private_dns_zone_virtual_network_link" "dns_zone_link" {
   name                 = "example-dns-link"
-  private_dns_zone_id  = var.private_dns_zone_id
+  private_dns_zone_name = var.private_dns_zone_name
   virtual_network_id   = azurerm_virtual_network.vnet.id
   resource_group_name  = azurerm_resource_group.rg.name
 
