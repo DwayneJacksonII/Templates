@@ -1,0 +1,8 @@
+# terraform.tfvars.example
+location = "usgovvirginia"
+private_endpoint_name = "example-endpoint"
+target_resource_id = "/subscriptions/<subscription_id>/resourceGroups/<rg_name>/providers/<resource_type>/<resource_name>"
+group_id = "blob"
+vnet_name = "example-vnet"
+subnet_name = "example-subnet"
+private_dns_zone_id = "/subscriptions/<subscription_id>/resourceGroups/<rg_name>/providers/Microsoft.Network/privateDnsZones/<dns_zone_name>"
