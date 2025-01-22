@@ -1,3 +1,9 @@
+#becip 
+#change log 
+# 1.0.0 - Initial version 1/16/25
+#1.0.1 - Updated for Azure Government use will need to verify the exact API versions supported in your Azure Government subscription.
+#1.0.2 - commenting out Environment use for gov 1/22/25- dj
+
 # main.tf
 terraform {
   required_providers {
@@ -12,7 +18,7 @@ provider "azurerm" {
   features {}
 
   # Use Azure Government cloud
-  environment = "usgovernment"
+  #environment = "usgovernment"
 }
 
 # Variables
