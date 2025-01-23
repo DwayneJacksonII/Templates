@@ -17,6 +17,7 @@ terraform {
 
 provider "azurerm" {
   features {}
+  skip_provider_registration = true
 
   # Uncomment for Azure Government
   # environment = "usgovernment"
