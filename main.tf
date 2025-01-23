@@ -1,6 +1,3 @@
-To fix the issue, you need to replace `private_dns_zone_id` with `private_dns_zone_name` and define the corresponding variable. Here is the updated `main.tf`:
-
-```hcl
 #change log 
 # 1.0.0 - Initial version 1/16/25
 #1.0.1 - Updated for Azure Government use will need to verify the exact API versions supported in your Azure Government subscription.
