@@ -6,4 +6,4 @@ target_resource_id = "/subscriptions/f7941b19-dbcd-42f3-a0cd-733fbb037571/resour
 group_id = "blob"
 vnet_name = "vnet-GOIdemo"
 subnet_name = "sn-GOI"
-private_dns_zone_id = "/subscriptions/f7941b19-dbcd-42f3-a0cd-733fbb037571/resourceGroups/tform1/providers/Microsoft.Network/privateDnsZones/privatelink.azurewebsites.net"
+private_dns_zone_name = "privatelink.azurewebsites.net"
