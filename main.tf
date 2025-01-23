@@ -10,7 +10,7 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "~> 3.64.0" # Replace with the latest supported version
+      version = "~> 3.64.0"
     }
   }
 }
@@ -18,12 +18,8 @@ terraform {
 provider "azurerm" {
   features {}
   skip_provider_registration = true
-
-  # Uncomment for Azure Government
-  # environment = "usgovernment"
 }
 
-# Variables
 variable "location" {
   description = "Location for the resources"
   type        = string
@@ -64,13 +60,11 @@ variable "private_dns_zone_name" {
   type        = string
 }
 
-# Resource Group
 resource "azurerm_resource_group" "rg" {
   name     = var.resource_group_name
   location = var.location
 }
 
-# Virtual Network
 resource "azurerm_virtual_network" "vnet" {
   name                = var.vnet_name
   address_space       = ["10.0.0.0/16"]
@@ -79,28 +73,31 @@ resource "azurerm_virtual_network" "vnet" {
   depends_on          = [azurerm_resource_group.rg]
 }
 
-# Subnet
 resource "azurerm_subnet" "subnet" {
   name                 = var.subnet_name
   resource_group_name  = azurerm_resource_group.rg.name
   virtual_network_name = azurerm_virtual_network.vnet.name
   address_prefixes     = ["10.0.1.0/24"]
-  depends_on           = [azurerm_resource_group.rg]
+  depends_on           = [azurerm_virtual_network.vnet]
 }
 
-# Private Endpoint
+resource "azurerm_private_dns_zone" "dns_zone" {
+  name                = var.private_dns_zone_name
+  resource_group_name = azurerm_resource_group.rg.name
+}
+
 resource "azurerm_private_endpoint" "private_endpoint" {
   name                = var.private_endpoint_name
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
   subnet_id           = azurerm_subnet.subnet.id
-  depends_on          = [azurerm_resource_group.rg]
+  depends_on          = [azurerm_subnet.subnet]
 
   private_service_connection {
     name                           = var.private_endpoint_name
     private_connection_resource_id = var.target_resource_id
-    subresource_names              = [var.group_id]
-    is_manual_connection           = false
+    subresource_names             = [var.group_id]
+    is_manual_connection          = false
   }
 
   tags = {
@@ -108,13 +105,14 @@ resource "azurerm_private_endpoint" "private_endpoint" {
   }
 }
 
-# DNS Zone Virtual Network Link
 resource "azurerm_private_dns_zone_virtual_network_link" "dns_zone_link" {
-  name                 = "example-dns-link"
+  name                  = "example-dns-link"
   private_dns_zone_name = var.private_dns_zone_name
-  virtual_network_id   = azurerm_virtual_network.vnet.id
-  resource_group_name  = azurerm_resource_group.rg.name
-  depends_on           = [azurerm_resource_group.rg]
-
-  registration_enabled = true
+  virtual_network_id    = azurerm_virtual_network.vnet.id
+  resource_group_name   = azurerm_resource_group.rg.name
+  registration_enabled  = true
+  depends_on = [
+    azurerm_private_dns_zone.dns_zone,
+    azurerm_virtual_network.vnet
+  ]
 }
