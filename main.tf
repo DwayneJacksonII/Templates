@@ -76,6 +76,7 @@ resource "azurerm_virtual_network" "vnet" {
   address_space       = ["10.0.0.0/16"]
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
+  depends_on          = [azurerm_resource_group.rg]
 }
 
 # Subnet
@@ -84,6 +85,7 @@ resource "azurerm_subnet" "subnet" {
   resource_group_name  = azurerm_resource_group.rg.name
   virtual_network_name = azurerm_virtual_network.vnet.name
   address_prefixes     = ["10.0.1.0/24"]
+  depends_on           = [azurerm_resource_group.rg]
 }
 
 # Private Endpoint
@@ -92,6 +94,7 @@ resource "azurerm_private_endpoint" "private_endpoint" {
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
   subnet_id           = azurerm_subnet.subnet.id
+  depends_on          = [azurerm_resource_group.rg]
 
   private_service_connection {
     name                           = var.private_endpoint_name
@@ -111,6 +114,7 @@ resource "azurerm_private_dns_zone_virtual_network_link" "dns_zone_link" {
   private_dns_zone_name = var.private_dns_zone_name
   virtual_network_id   = azurerm_virtual_network.vnet.id
   resource_group_name  = azurerm_resource_group.rg.name
+  depends_on           = [azurerm_resource_group.rg]
 
   registration_enabled = true
 }
