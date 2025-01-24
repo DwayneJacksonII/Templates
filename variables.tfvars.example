@@ -1,0 +1,9 @@
+# terraform.tfvars.example
+location = "<region for creation of resources>"
+resource_group_name = "<name for recource group to be created>"
+private_endpoint_name = "<name for private end point to be created>"
+target_resource_id = "/subscriptions/<yourSubscriptionId>/resourceGroups/<yourcurrent funcation app resource group>/providers/Microsoft.Web/sites/<your current funcation app name"
+group_id = "sites"
+vnet_name = "<name for vnetname to be created>>"
+subnet_name = "<name for subnetname to be created>>"
+private_dns_zone_name = "privatelink.azurewebsites.net"
